@@ -41,6 +41,10 @@ jobs:
       run: chmod +x gradlew
     - name: Test with Gradle
       run: ./gradlew test
+    - uses: actions/upload-artifact@v2
+      with:
+        name: testReport
+        path: build/reports/ # or path/to/artifact
 
   Assemble:
 
