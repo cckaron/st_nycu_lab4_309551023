@@ -44,24 +44,40 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: testReport
-        path: build/reports/ # or path/to/artifact
+        path: build/reports # or path/to/artifact
 
   Assemble:
 
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Assemble with Gradle
-        run: ./gradlew assemble
-      - uses: actions/upload-artifact@v2
-        with:
-          name: buildJar
-          path: build/libs/Lab-4-1.0-SNAPSHOT.jar
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Assemble with Gradle
+      run: ./gradlew assemble
+    - uses: actions/upload-artifact@v2
+      with:
+        name: buildJar
+        path: build/libs
+    - name: Set Jar Name
+      run: for entry in "build/libs"; do echo "JAR_FILENAME=$(echo ${entry})"; done
+    - name: Test Jar Name
+      run: echo $JAR_FILENAME
+
+  Release:
+    if: ${{ contains(github.ref, 'tag') }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
