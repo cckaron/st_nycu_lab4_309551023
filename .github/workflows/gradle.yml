@@ -61,3 +61,7 @@ jobs:
         run: chmod +x gradlew
       - name: Assemble with Gradle
         run: ./gradlew assemble
+      - uses: actions/upload-artifact@v2
+        with:
+          name: buildJar
+          path: build/libs/st_nycu_lab4_309551023-1.0-SNAPSHOT.jar
