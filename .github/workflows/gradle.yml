@@ -86,7 +86,6 @@ jobs:
       with:
         name: ${{ needs.Assemble.outputs.JAR_FILENAME }}
         path: download
-
     - name: Release
       uses: softprops/action-gh-release@v1
       if: ${{ startsWith(github.ref, 'refs/tags') }}
