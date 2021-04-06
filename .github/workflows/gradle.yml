@@ -7,7 +7,6 @@ on: push
 
 jobs:
   Compile:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -17,13 +16,22 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
     - name: Compile with Gradle
       run: ./gradlew compileJava
 
   Test:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -33,6 +41,14 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Test with Gradle
@@ -43,7 +59,6 @@ jobs:
         path: build/reports # or path/to/artifact
 
   Assemble:
-
     runs-on: ubuntu-latest
 
     outputs:
@@ -56,14 +71,25 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Assemble with Gradle
       run: ./gradlew assemble
+
     - uses: actions/upload-artifact@v2
       with:
         name: buildJar
         path: build/libs
+
     - name: Set Jar Name to Environment Variable
       run: for entry in "build/libs"/*; do echo "JAR_FILENAME=$(echo $(basename ${entry}))" >> $GITHUB_ENV ; done
     - id: passJarName
