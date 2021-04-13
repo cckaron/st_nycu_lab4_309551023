@@ -1,8 +1,8 @@
 public class Game {
-    public String validate(String gesture){
+    public Boolean validate(String gesture){
         if (! (gesture.equals("rock") || gesture.equals("paper") || gesture.equals("scissors")))
             throw new IllegalArgumentException("Bad Choice!");
-        return gesture;
+        return true;
     }
 
     public String judge(String gesture1, String gesture2) {

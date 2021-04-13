@@ -33,7 +33,7 @@ class GameTest {
     @ParameterizedTest
     @ValueSource(strings = {"paper", "scissors", "rock"})
     void legal_input(String input) {
-        assertEquals(game.validate(input), input);
+        assertTrue(game.validate(input));
     }
 
     @ParameterizedTest
